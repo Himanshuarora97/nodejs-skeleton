@@ -7,5 +7,6 @@ const router = express.Router();
 // Admin routes
 //= ===============================
 router.get("/allUsers", userController.allUsers);
+router.patch("/deleteUser/:user_id", userController.deleteUser);
 
 module.exports = router;

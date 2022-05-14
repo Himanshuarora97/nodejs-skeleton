@@ -7,7 +7,7 @@ import { successResponse, errorResponse, uniqueId } from "../../helpers";
 export const allUsers = async (req, res) => {
   try {
     const page = req.params.page || 1;
-    const limit = 2;
+    const limit = 10;
     const users = await User.findAndCountAll({
       order: [
         ["createdAt", "DESC"],
@@ -62,7 +62,7 @@ export const register = async (req, res) => {
     };
 
     const newUser = await User.create(payload);
-    return successResponse(req, res, {});
+    return successResponse(req, res, newUser);
   } catch (error) {
     return errorResponse(req, res, error.message);
   }
@@ -130,7 +130,29 @@ export const changePassword = async (req, res) => {
       .update(req.body.newPassword)
       .digest("hex");
 
-    await User.update({ password: newPass }, { where: { id: user.id } });
+    const newUser = await User.update(
+      { password: newPass },
+      { where: { id: user.id } }
+    );
+    return successResponse(req, res, newUser);
+  } catch (error) {
+    return errorResponse(req, res, error.message);
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.user_id;
+    if (req.user.id == userId) {
+      throw new Error("You can't deactivate yourself");
+    }
+    const user = await User.findOne({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    await User.update({ isVerified: false }, { where: { id: user.id } });
     return successResponse(req, res, {});
   } catch (error) {
     return errorResponse(req, res, error.message);
