@@ -27,9 +27,6 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
       },
-      profilePic: {
-        type: DataTypes.STRING,
-      },
       isAdmin: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -52,8 +49,6 @@ module.exports = (sequelize, DataTypes) => {
           attributes: { include: ["password", "verifyToken", "isAdmin"] },
         },
       },
-    },
-    {
       sequelize,
       modelName: "User",
     }

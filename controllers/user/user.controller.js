@@ -74,14 +74,14 @@ export const login = async (req, res) => {
       where: { email: req.body.email },
     });
     if (!user) {
-      throw new Error("Incorrect Email Id/Password");
+      throw new Error("Incorrect Email Id/Password v1");
     }
     const reqPass = crypto
       .createHash("md5")
       .update(req.body.password || "")
       .digest("hex");
     if (reqPass !== user.password) {
-      throw new Error("Incorrect Email Id/Password");
+      throw new Error("Incorrect Email Id/Password v2");
     }
     const token = jwt.sign(
       {
